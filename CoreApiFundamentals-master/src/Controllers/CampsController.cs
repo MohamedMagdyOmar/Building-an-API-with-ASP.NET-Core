@@ -71,6 +71,7 @@ namespace CoreCodeCamp.Controllers
         }
 
         [HttpGet("{search}")]
+        // http://localhost:6600/api/camps?search=2018-10-18
         // the default value in the parameter is important, because it gives us the options to add query string to the URI, or leave it without query string
         public async Task<IActionResult> SearchByDate(DateTime theDate,bool includeTalks = false)
         {

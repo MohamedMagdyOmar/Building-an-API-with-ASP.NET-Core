@@ -46,5 +46,27 @@ namespace CoreCodeCamp.Controllers
             }
 
         }
+
+        // this attribute to have the following URL to be routed here, and injected to the string parameter in this method
+        // http://localhost:6600/api/camps/monikerName
+        [HttpGet("{moniker}")]
+        public async Task<IActionResult> Get(string moniker)
+        {
+            try
+            {
+                var result = await _repository.GetCampAsync(moniker);
+
+                if (result == null) return NotFound();
+
+                CampModel models = _mapper.Map<CampModel>(result);
+                return Ok(models);
+            }
+            catch
+            {
+                // becuase we do not have something like "Ok" for internal server error
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
+            }
+
+        }
     }
 }

@@ -27,19 +27,20 @@ namespace CoreCodeCamp.Controllers
         // make sure it is get operation.
         // the "Route" [Route("api/[controller]")] + "Verb" [HttpGet] on the action -> is how you get some operation that someone can call
         [HttpGet]
-        public async Task<IActionResult> GetCamps()
+        // the default value in the parameter is important, because it gives us the options to add query string to the URI, or leave it without query string
+        public async Task<IActionResult> GetCamps(bool includeTalks = false)
         {
             // if we want to say specific what this api returns for me, we can declare the function name as follows:
             // public async Task<ActionResult<CampModel[]>> GetCamps()
             try
             {
-                var results = await _repository.GetAllCampsAsync();
+                var results = await _repository.GetAllCampsAsync(includeTalks);
 
                 // mean please map from results to array of CampModel
                 CampModel[] models = _mapper.Map<CampModel[]>(results);
                 return Ok(models);
             }
-            catch
+            catch(Exception e)
             {
                 // becuase we do not have something like "Ok" for internal server error
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Error");

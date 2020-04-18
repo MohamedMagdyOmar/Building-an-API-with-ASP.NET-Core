@@ -14,6 +14,10 @@ namespace CoreCodeCamp.Data
             // yo can do this also for all properties
             this.CreateMap<Camp, CampModel>()
                 .ForMember(c => c.Venue, o => o.MapFrom(m => m.Location.VenueName));
+
+            this.CreateMap<Talk, TalkModel>();
+
+            this.CreateMap<Speaker, SpeakerModel>();
         }
     }
 }

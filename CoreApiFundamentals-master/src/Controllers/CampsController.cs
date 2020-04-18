@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using CoreCodeCamp.Data;
+using CoreCodeCamp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,20 +17,27 @@ namespace CoreCodeCamp.Controllers
     public class CampsController : ControllerBase
     {
         private readonly ICampRepository _repository;
+        private readonly IMapper _mapper;
 
-        public CampsController(ICampRepository repository)
+        public CampsController(ICampRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
         // make sure it is get operation.
         // the "Route" [Route("api/[controller]")] + "Verb" [HttpGet] on the action -> is how you get some operation that someone can call
         [HttpGet]
         public async Task<IActionResult> GetCamps()
         {
+            // if we want to say specific what this api returns for me, we can declare the function name as follows:
+            // public async Task<ActionResult<CampModel[]>> GetCamps()
             try
             {
                 var results = await _repository.GetAllCampsAsync();
-                return Ok(results);
+
+                // mean please map from results to array of CampModel
+                CampModel[] models = _mapper.Map<CampModel[]>(results);
+                return Ok(models);
             }
             catch
             {

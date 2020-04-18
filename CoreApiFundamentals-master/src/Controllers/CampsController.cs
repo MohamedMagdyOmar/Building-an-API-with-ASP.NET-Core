@@ -23,10 +23,19 @@ namespace CoreCodeCamp.Controllers
         // make sure it is get operation.
         // the "Route" [Route("api/[controller]")] + "Verb" [HttpGet] on the action -> is how you get some operation that someone can call
         [HttpGet]
-        public IActionResult GetCamps()
+        public async Task<IActionResult> GetCamps()
         {
-            var results = _repository.GetAllCampsAsync();
-            return Ok(new { Moniker = "ATL2020", Name = "Atlanta Code Camp" });
+            try
+            {
+                var results = await _repository.GetAllCampsAsync();
+                return Ok(results);
+            }
+            catch
+            {
+                // becuase we do not have something like "Ok" for internal server error
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
+            }
+
         }
     }
 }

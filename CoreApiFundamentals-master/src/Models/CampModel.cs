@@ -15,7 +15,9 @@ namespace CoreCodeCamp.Models
 
         // using the name of the class entity "Location" before the name(prefix) of the property, makes Automapper understand that should 
         // fill this data from Location Object "nasa7a menno"
-        public string LocationVenueName { get; set; }
+        // the problem with this approach that the retrieved json will have same variable name shich is not looks good
+        // so we will use another way of mapping as it appears in "Venue" Property
+        public string Venue { get; set; }
         public string LocationAddress1 { get; set; }
         public string LocationAddress2 { get; set; }
         public string LocationAddress3 { get; set; }

@@ -11,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace CoreCodeCamp
 {
@@ -24,7 +23,7 @@ namespace CoreCodeCamp
       services.AddAutoMapper(typeof(Startup));
 
       services.AddMvc()
-        .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
     }
 
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)

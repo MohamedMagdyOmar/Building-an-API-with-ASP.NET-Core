@@ -7,6 +7,7 @@ using CoreCodeCamp.Data;
 using CoreCodeCamp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 namespace CoreCodeCamp.Controllers
 {
@@ -18,11 +19,13 @@ namespace CoreCodeCamp.Controllers
     {
         private readonly ICampRepository _repository;
         private readonly IMapper _mapper;
+        private readonly LinkGenerator _linkGenerator;
 
-        public CampsController(ICampRepository repository, IMapper mapper)
+        public CampsController(ICampRepository repository, IMapper mapper, LinkGenerator linkGenerator)
         {
             _repository = repository;
             _mapper = mapper;
+            _linkGenerator = linkGenerator;
         }
         // make sure it is get operation.
         // the "Route" [Route("api/[controller]")] + "Verb" [HttpGet] on the action -> is how you get some operation that someone can call
@@ -92,6 +95,35 @@ namespace CoreCodeCamp.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
             }
 
+        }
+
+        [HttpPost]
+        // you can use either [FromBody] or [APIController]
+        public async Task<IActionResult> PostCamp(CampModel campModel)
+        {
+            try
+            {
+                // take the "campModel" and map it back to our "camp"
+                var camp = _mapper.Map<Camp>(campModel);
+                _repository.Add(camp);
+                if(await _repository.SaveChangesAsync())
+                {
+                    // in POST method we did not return Ok(); we have to return different value
+                    // we have to return Created
+                    // created takes 2 parameters, the first is the "URI" that you should use in the "Get" request to get this object
+                    // second parameter is the object that should be returned if use this URI.
+                    // in order to make the URI generic, we have to use one of ASP.Net Core Features
+                    // you can use the following $"/api/camps/{camp.Moniker}", but this is not good because it is fragile because it is hardcoding
+                    return Created("", _mapper.Map<CampModel>(camp));
+                }
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
+            }
+
+            // if "SaveChanges" fail
+            return BadRequest();
         }
     }
 }

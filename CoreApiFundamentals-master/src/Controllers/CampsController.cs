@@ -137,5 +137,30 @@ namespace CoreCodeCamp.Controllers
             // if "SaveChanges" fail
             return BadRequest();
         }
+
+        [HttpPut("{moniker}")]
+        // http://localhost:6600/api/camps/SD2018
+        // you have to include body
+        public async Task<ActionResult<CampModel>> Put(string moniker, CampModel model)
+        {
+            try
+            {
+                var oldCamp = await _repository.GetCampAsync(moniker);
+                if (oldCamp == null) return NotFound($"Couldnot find camp with moniker of {moniker}");
+
+                _mapper.Map(model, oldCamp);
+                if(await _repository.SaveChangesAsync())
+                {
+                    return _mapper.Map<CampModel>(oldCamp);
+                }
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
+            }
+
+            // if "SaveChanges" fail
+            return BadRequest();
+        }
     }
 }

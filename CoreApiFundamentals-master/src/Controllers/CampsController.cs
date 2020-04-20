@@ -162,5 +162,32 @@ namespace CoreCodeCamp.Controllers
             // if "SaveChanges" fail
             return BadRequest();
         }
+
+        [HttpDelete("{moniker}")]
+        // http://localhost:6600/api/camps/SD2018
+        // you have to include body
+        public async Task<IActionResult> Delete(string moniker)
+        {
+            try
+            {
+                var oldCamp = await _repository.GetCampAsync(moniker);
+
+                if (oldCamp == null) return NotFound($"Couldnot find camp with moniker of {moniker}");
+
+                _repository.Delete(oldCamp);
+
+                if (await _repository.SaveChangesAsync())
+                {
+                    return Ok();
+                }
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
+            }
+
+            // if "SaveChanges" fail
+            return BadRequest();
+        }
     }
 }

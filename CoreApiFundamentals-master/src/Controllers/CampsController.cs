@@ -98,13 +98,20 @@ namespace CoreCodeCamp.Controllers
         }
 
         [HttpPost]
+        // http://localhost:6600/api/camps
         // you can use either [FromBody] or [APIController]
-        public async Task<IActionResult> PostCamp(CampModel campModel)
+        public async Task<IActionResult> PostCamp(CampModel model)
         {
             try
             {
+                var location = _linkGenerator.GetPathByAction("Get", "Camps", new { moniker = model.Moniker });
+                if(string.IsNullOrWhiteSpace(location))
+                {
+                    return BadRequest("Could not use current moniker");
+                }
                 // take the "campModel" and map it back to our "camp"
-                var camp = _mapper.Map<Camp>(campModel);
+                var camp = _mapper.Map<Camp>(model);
+
                 _repository.Add(camp);
                 if(await _repository.SaveChangesAsync())
                 {

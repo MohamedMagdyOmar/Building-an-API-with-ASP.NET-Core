@@ -104,6 +104,11 @@ namespace CoreCodeCamp.Controllers
         {
             try
             {
+                var existing = await _repository.GetCampAsync(model.Moniker);
+                if(existing != null)
+                {
+                    return BadRequest("Moniker In Use");
+                }
                 var location = _linkGenerator.GetPathByAction("Get", "Camps", new { moniker = model.Moniker });
                 if(string.IsNullOrWhiteSpace(location))
                 {

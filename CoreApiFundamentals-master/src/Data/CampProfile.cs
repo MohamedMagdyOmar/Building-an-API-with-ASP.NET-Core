@@ -13,13 +13,13 @@ namespace CoreCodeCamp.Data
         {
             // yo can do this also for all properties
             this.CreateMap<Camp, CampModel>()
-                .ForMember(c => c.Venue, o => o.MapFrom(m => m.Location.VenueName));
+                .ForMember(c => c.Venue, o => o.MapFrom(m => m.Location.VenueName)).ReverseMap();
 
-            this.CreateMap<CampModel, Camp>();
+            this.CreateMap<Talk, TalkModel>().ReverseMap()
+                .ForMember(c => c.Speaker, o => o.Ignore())
+                .ForMember(c => c.Camp, o => o.Ignore());
 
-            this.CreateMap<Talk, TalkModel>();
-
-            this.CreateMap<Speaker, SpeakerModel>();
+            this.CreateMap<Speaker, SpeakerModel>().ReverseMap();
         }
     }
 }

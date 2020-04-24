@@ -22,6 +22,8 @@ namespace CoreCodeCamp
       services.AddScoped<ICampRepository, CampRepository>();
       services.AddAutoMapper(typeof(Startup));
       services.AddApiVersioning(opt => {
+          // if you did not specify version in the url, it will assume the default
+          opt.AssumeDefaultVersionWhenUnspecified = true;
           opt.DefaultApiVersion = new ApiVersion(1, 0);
           opt.ReportApiVersions = true;
       });

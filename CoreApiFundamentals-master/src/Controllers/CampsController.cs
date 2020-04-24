@@ -15,6 +15,8 @@ namespace CoreCodeCamp.Controllers
     // [controller] -> means whatever comes before the word "controller", so there is no need to hard code the word "Camps".
     [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
     public class CampsController : ControllerBase
     {
         private readonly ICampRepository _repository;
@@ -60,6 +62,29 @@ namespace CoreCodeCamp.Controllers
             try
             {
                 var result = await _repository.GetCampAsync(moniker);
+
+                if (result == null) return NotFound();
+
+                CampModel models = _mapper.Map<CampModel>(result);
+                return Ok(models);
+            }
+            catch
+            {
+                // becuase we do not have something like "Ok" for internal server error
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Error");
+            }
+
+        }
+
+        [HttpGet("{moniker}")]
+        [MapToApiVersion("1.0")]
+        // if someone is using version 1.0, then he will consume this one
+        // in this case it will look into 2 thing in the URL, firstly the string "moniker", then it will look to the version
+        public async Task<IActionResult> Get10(string moniker)
+        {
+            try
+            {
+                var result = await _repository.GetCampAsync(moniker, true);
 
                 if (result == null) return NotFound();
 

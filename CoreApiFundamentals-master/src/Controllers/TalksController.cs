@@ -102,6 +102,7 @@ namespace CoreCodeCamp.Controllers
         }
 
         [HttpPut("{id:int}")]
+        http://localhost:6600/api/camps/ATL2018/talks/3
         public async Task<ActionResult<TalkModel>> Put(string moniker, int id, TalkModel talkModel)
         {
             try

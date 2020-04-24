@@ -31,6 +31,7 @@ namespace CoreCodeCamp.Controllers
         // the "Route" [Route("api/[controller]")] + "Verb" [HttpGet] on the action -> is how you get some operation that someone can call
         [HttpGet]
         // the default value in the parameter is important, because it gives us the options to add query string to the URI, or leave it without query string
+        // http://localhost:6600/api/camps?includeTalks=true&api-version=1.0
         public async Task<IActionResult> GetCamps(bool includeTalks = false)
         {
             // if we want to say specific what this api returns for me, we can declare the function name as follows:

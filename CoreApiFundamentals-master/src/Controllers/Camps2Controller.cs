@@ -13,17 +13,16 @@ namespace CoreCodeCamp.Controllers
 {
     // this route is going to be exposed to route table
     // [controller] -> means whatever comes before the word "controller", so there is no need to hard code the word "Camps".
-    [Route("api/[controller]")]
+    [Route("api/camps")]
     [ApiController]
-    [ApiVersion("1.0")]
-    [ApiVersion("1.1")]
-    public class CampsController : ControllerBase
+    [ApiVersion("2.0")]
+    public class Camps2Controller : ControllerBase
     {
         private readonly ICampRepository _repository;
         private readonly IMapper _mapper;
         private readonly LinkGenerator _linkGenerator;
 
-        public CampsController(ICampRepository repository, IMapper mapper, LinkGenerator linkGenerator)
+        public Camps2Controller(ICampRepository repository, IMapper mapper, LinkGenerator linkGenerator)
         {
             _repository = repository;
             _mapper = mapper;
@@ -41,7 +40,11 @@ namespace CoreCodeCamp.Controllers
             try
             {
                 var results = await _repository.GetAllCampsAsync(includeTalks);
-
+                var result = new
+                {
+                    Count = results.Count(),
+                    results = _mapper.Map<CampModel[]>(results)
+                };
                 // mean please map from results to array of CampModel
                 CampModel[] models = _mapper.Map<CampModel[]>(results);
                 return Ok(models);
